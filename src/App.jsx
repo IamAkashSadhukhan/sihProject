@@ -1,9 +1,11 @@
-import React from 'react'
-
+import React from "react";
+import Page2 from "./components/Page2";
 const App = () => {
   return (
-    <div>App</div>
-  )
-}
+    <div>
+      <Page2 />
+    </div>
+  );
+};
 
-export default App
+export default App;
