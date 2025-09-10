@@ -51,7 +51,7 @@ const Market = () => {
       <div className="w-full flex items-center backdrop-blur-md justify-between px-4 md:px-6 py-4 bg-white/30 relative">
         <IoCaretBack
           className="text-2xl cursor-pointer"
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/Page2")}
         />
         <h1 className="text-xl md:text-3xl font-bold tracking-wide text-center">
           MARKET OVERVIEW

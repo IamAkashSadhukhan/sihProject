@@ -1,5 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { IoCaretBack } from "react-icons/io5";
+import { FiMenu } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 /**
  * SoilSummary
@@ -19,32 +22,55 @@ const SoilSummary = ({
   organic = "0.8%",
   onCheck = () => alert("Check soil details"),
 }) => {
+  const navigate = useNavigate(); // Hook inside component
+
+  const handelBack = () => {
+    navigate("/Page2");
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-emerald-950 p-6">
+    <div className="min-h-screen flex flex-col bg-emerald-950 p-4 sm:p-6">
+      {/* Top Navigation */}
+      <div className="w-full h-16 md:h-20 flex bg-white/10 backdrop-blur-md items-center justify-between px-4 md:px-6 mb-6 md:mb-8">
+        <div className="w-6 md:w-8">
+          <IoCaretBack
+            className="w-6 h-6 md:w-8 md:h-8 cursor-pointer text-white"
+            onClick={handelBack}
+          />
+        </div>
+        <h1 className="text-lg md:text-2xl lg:text-3xl font-bold tracking-wide text-center text-white">
+          SOIL DETAILS
+        </h1>
+        <div className="w-6 md:w-8 flex items-center justify-center">
+          <FiMenu className="text-xl md:text-2xl text-white" />
+        </div>
+      </div>
+
+      {/* Main Card */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
-        className="w-full max-w-5xl rounded-lg p-8 md:p-12 bg-gradient-to-b from-emerald-950 via-emerald-900 to-emerald-950 shadow-2xl"
+        className="w-full max-w-5xl rounded-xl p-6 sm:p-10 md:p-12 bg-gradient-to-b from-emerald-950 via-emerald-900 to-emerald-950 shadow-2xl mx-auto"
       >
         {/* Header */}
-        <div className="flex flex-col items-center text-center mb-10">
+        <div className="flex flex-col items-center text-center mb-8 sm:mb-10">
           <div className="flex items-center gap-3">
-            <LeafIcon className="w-10 h-10 text-amber-300" />
-            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-white">
+            <LeafIcon className="w-8 h-8 sm:w-10 sm:h-10 text-amber-300" />
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white">
               {title}
             </h1>
           </div>
 
-          <div className="w-40 h-1 bg-emerald-400 mt-4 mb-3 rounded" />
+          <div className="w-24 sm:w-32 h-1 bg-emerald-400 mt-3 mb-2 rounded" />
 
-          <p className="text-amber-200 text-sm md:text-base font-semibold uppercase tracking-wide">
+          <p className="text-amber-200 text-xs sm:text-sm md:text-base font-semibold uppercase tracking-wide">
             {subtitle}
           </p>
         </div>
 
         {/* Content Row */}
-        <div className="flex flex-col md:flex-row items-center md:items-stretch justify-between gap-8">
+        <div className="flex flex-col sm:flex-row items-center sm:items-stretch justify-between gap-6 sm:gap-8">
           <StatCard label="PH" value={ph} icon={FlaskIcon} />
           <VerticalDivider />
           <StatCard label="NUTRIENTS" value={nutrients} icon={BagIcon} />
@@ -53,12 +79,12 @@ const SoilSummary = ({
         </div>
 
         {/* CTA */}
-        <div className="flex justify-center mt-12">
+        <div className="flex justify-center mt-10 sm:mt-12">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={onCheck}
-            className="bg-emerald-300 text-emerald-900 font-extrabold px-12 py-3 rounded-full text-lg shadow-xl hover:shadow-2xl transition"
+            className="bg-emerald-300 text-emerald-900 font-extrabold px-8 sm:px-10 py-2 sm:py-3 rounded-full text-base sm:text-lg shadow-xl hover:shadow-2xl transition"
           >
             CHECK SOIL DETAILS
           </motion.button>
@@ -80,14 +106,14 @@ const StatCard = ({ label, value, icon: Icon }) => (
     transition={{ duration: 0.6 }}
     className="flex-1 flex flex-col items-center text-center"
   >
-    <div className="flex items-center justify-center w-28 h-28 md:w-32 md:h-32 bg-emerald-700 rounded-lg shadow-lg">
-      <Icon className="w-14 h-14 md:w-16 md:h-16 text-amber-300" />
+    <div className="flex items-center justify-center w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 bg-emerald-700 rounded-lg shadow-lg">
+      <Icon className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 text-amber-300" />
     </div>
-    <div className="mt-5">
-      <div className="text-white uppercase font-bold text-lg md:text-xl tracking-wide">
+    <div className="mt-4 sm:mt-5">
+      <div className="text-white uppercase font-bold text-sm sm:text-lg md:text-xl tracking-wide">
         {label}
       </div>
-      <div className="mt-2 text-2xl md:text-3xl font-extrabold text-amber-300">
+      <div className="mt-1 sm:mt-2 text-xl sm:text-2xl md:text-3xl font-extrabold text-amber-300">
         {value}
       </div>
     </div>
@@ -95,8 +121,8 @@ const StatCard = ({ label, value, icon: Icon }) => (
 );
 
 const VerticalDivider = () => (
-  <div className="hidden md:flex items-center">
-    <div className="h-32 border-r border-emerald-600 mx-6" />
+  <div className="hidden sm:flex items-center">
+    <div className="h-24 sm:h-32 border-r border-emerald-600 mx-4 sm:mx-6" />
   </div>
 );
 

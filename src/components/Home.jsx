@@ -38,6 +38,8 @@ const Home = () => {
   const images = [
     "https://media.istockphoto.com/id/1320570548/photo/peanuts-plantation-in-countryside-thailand-near-mountain.jpg?s=612x612&w=0&k=20&c=Rth_YqBkOw4_GA0Ed-zrENSelOnvIopyTH-WYbclrCg=",
     "https://media.istockphoto.com/id/503646746/photo/farmer-spreading-fertilizer-in-the-field-wheat.jpg?s=612x612&w=0&k=20&c=Lgxsjbz0jaYyQrvfzhyAsW2zELtshRP4AtLzkpmcLiE=",
+    "https://images.pexels.com/photos/1334312/pexels-photo-1334312.jpeg?cs=srgb&dl=pexels-designstrive-1334312.jpg&fm=jpg",
+   
   ];
 
   useEffect(() => {
@@ -160,10 +162,10 @@ const Home = () => {
                 </div>
               )}
             </div>
-            <CiMenuBurger
+            {/* <CiMenuBurger
               size={30}
               className="text-white cursor-pointer hover:text-green-300 transition-colors"
-            />
+            /> */}
             <RiAccountCircleFill
               size={30}
               className="text-white cursor-pointer hover:text-green-300 transition-colors"
@@ -174,13 +176,17 @@ const Home = () => {
         {/* Search */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <form
-            className="relative w-[40rem] max-w-[90%]"
+            className="relative w-[40rem] max-w-[90%] mx-auto"
             onSubmit={handelSubmit}
           >
-            <CiSearch
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl text-black cursor-pointer hover:text-green-600 transition-colors"
-              onClick={handelSubmit}
+            {/* Left Icon */}
+            <IoLocationSharp
+              size={30}
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-red-500 cursor-pointer hover:text-green-600 transition-colors"
+              onClick={detectLocation}
             />
+
+            {/* Input */}
             <input
               type="text"
               placeholder="Enter location to get crop recommendation"
@@ -188,10 +194,11 @@ const Home = () => {
               onChange={(e) => setSearchInput(e.target.value)}
               className="w-full h-[3rem] pl-12 pr-14 rounded-full bg-white text-gray-600 placeholder:font-semibold outline-none shadow-md"
             />
-            <IoLocationSharp
-              size={30}
-              className="absolute right-5 top-1/2 -translate-y-1/2 text-red-500 cursor-pointer hover:text-green-600 transition-colors"
-              onClick={detectLocation}
+
+            {/* Right Icon */}
+            <CiSearch
+              className="absolute right-5 top-1/2 -translate-y-1/2 text-2xl text-black cursor-pointer hover:text-green-600 transition-colors"
+              onClick={handelSubmit}
             />
           </form>
         </div>
@@ -199,7 +206,10 @@ const Home = () => {
         {/* Watermark */}
         <div className="bg-[#325E24]/80 mx-auto w-[70%] h-[20%] mt-[25%] flex items-center justify-around rounded-lg p-6">
           <div className="flex flex-col items-center gap-2 cursor-pointer hover:scale-105 transition-transform">
-            <LuMessageCircle size={50} className="text-white hover:text-green-300 transition-colors" />
+            <LuMessageCircle
+              size={50}
+              className="text-white hover:text-green-300 transition-colors"
+            />
             <h1 className="text-white text-lg font-bold uppercase text-center">
               Message Your Query
             </h1>
@@ -209,14 +219,20 @@ const Home = () => {
             className="flex flex-col items-center gap-2 cursor-pointer hover:scale-105 transition-transform"
             onClick={DiseaseDetection}
           >
-            <FcSearch size={50} className="hover:brightness-110 transition-all" />
+            <FcSearch
+              size={50}
+              className="hover:brightness-110 transition-all"
+            />
             <h1 className="text-white text-lg font-bold uppercase text-center">
               Disease Detection
             </h1>
           </div>
           <div className="h-16 border-l border-white"></div>
           <div className="flex flex-col items-center gap-2 cursor-pointer hover:scale-105 transition-transform">
-            <AiFillAudio size={50} className="text-white hover:text-green-300 transition-colors" />
+            <AiFillAudio
+              size={50}
+              className="text-white hover:text-green-300 transition-colors"
+            />
             <h1 className="text-white text-lg font-bold uppercase text-center">
               Talk To Us Anytime
             </h1>
@@ -254,11 +270,14 @@ const Home = () => {
         {/* Mobile Navbar */}
         <div className="flex items-center justify-between px-4 py-2 bg-black/50 relative">
           <div className="flex items-center gap-2">
+           
             <PiPlantFill size={28} className="text-white" />
             <h1 className="text-lg font-bold text-white">Khet Samadhan</h1>
           </div>
+          
           <div className="flex items-center gap-4">
             <div className="relative">
+               
               <IoLanguageOutline
                 size={26}
                 className="text-white cursor-pointer hover:text-green-300 transition-colors"
@@ -280,6 +299,10 @@ const Home = () => {
                 </div>
               )}
             </div>
+            <RiAccountCircleFill
+              size={30}
+              className="text-white cursor-pointer hover:text-green-300 transition-colors"
+            />
             <CiSearch
               className="absolute left-3 top-1/2 -translate-y-1/2 text-xl text-gray-600 cursor-pointer hover:text-green-600 transition-colors"
               onClick={handelSubmit}
