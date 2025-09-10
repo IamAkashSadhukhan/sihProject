@@ -7,10 +7,11 @@ import { useNavigate } from "react-router-dom";
 
 const Page2 = () => {
   const [isOpen, setIsOpen] = useState(false);
+
   const navigate = useNavigate();
-  const handelBack = ()=>{
+  const handelBack = () => {
     navigate("/");
-  }
+  };
 
   const data = [
     { name: "Paddy", expense: "₹2000", profit: "₹5000" },
@@ -19,23 +20,33 @@ const Page2 = () => {
   ];
 
   return (
-    <div
-      className="min-h-screen text-white flex flex-col relative"
-      style={{
-        backgroundImage:
-          "url('https://media.istockphoto.com/id/2197365034/photo/narrow-pathway-through-the-center-of-green-rice-fields.jpg?s=612x612&w=0&k=20&c=w9ne1-BR9X71u7TEuUf6NOSaxgQYKFJcZWIdrESMmlI=')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      {/* Overlay for readability */}
-      <div className="absolute inset-0 bg-black/40"></div>
+    <div className="relative min-h-screen text-white flex flex-col">
+      {/* ✅ Background Video */}
+      <video
+        className="absolute top-0 left-0 w-full h-full object-cover -z-10"
+        autoPlay
+        loop
+        muted
+        playsInline
+      >
+        <source
+          src="https://v1.pinimg.com/videos/mc/expMp4/ea/36/83/ea36831aa23769a2f59d34497b00c76b_t1.mp4"
+          type="video/mp4"
+        />
+        Your browser does not support the video tag.
+      </video>
+
+      {/* ✅ Overlay for readability */}
+      <div className="absolute inset-0 bg-black/40 -z-10"></div>
 
       <div className="relative flex flex-col flex-1">
         {/* Top Bar */}
         <div className="w-full h-16 md:h-20 flex bg-white/10 backdrop-blur-md items-center justify-between px-4 md:px-6">
           <div className="w-6 md:w-8">
-            <IoCaretBack className="w-6 h-6 md:w-8 md:h-8"  onClick={handelBack}/>
+            <IoCaretBack
+              className="w-6 h-6 md:w-8 md:h-8 cursor-pointer"
+              onClick={handelBack}
+            />
           </div>
           <h1 className="text-lg md:text-2xl lg:text-3xl font-bold tracking-wide text-center">
             CROP CHART
@@ -45,7 +56,7 @@ const Page2 = () => {
           </div>
         </div>
 
-        {/* Heading + Subheading in one box */}
+        {/* Heading + Subheading */}
         <div className="flex justify-center mt-4 md:mt-6 px-4">
           <div className="bg-white/20 backdrop-blur-md rounded-xl px-4 md:px-8 py-3 text-center max-w-2xl">
             <h1 className="text-xl md:text-2xl lg:text-3xl font-bold underline">
