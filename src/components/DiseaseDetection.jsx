@@ -3,10 +3,15 @@ import { IoCaretBack } from "react-icons/io5";
 import { FiMenu } from "react-icons/fi";
 import { MdAddPhotoAlternate } from "react-icons/md";
 import { Mic } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const DiseaseDetection = () => {
   const [selectedImage, setSelectedImage] = useState(null);
+  const navigate = useNavigate();
+  const HomePage = ()=>{
 
+    navigate("/");
+  }
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       setSelectedImage(URL.createObjectURL(e.target.files[0]));
@@ -30,7 +35,7 @@ const DiseaseDetection = () => {
     >
       {/* Top Bar */}
       <div className="w-full  flex items-center backdrop-blur-md justify-between px-4 md:px-6 py-4 bg-black/50">
-        <IoCaretBack className="text-2xl cursor-pointer" />
+        <IoCaretBack className="text-2xl cursor-pointer" onClick={HomePage}/>
         <h1 className="text-xl md:text-3xl font-bold tracking-wide text-center">
           DISEASE DETECTION
         </h1>

@@ -7,6 +7,7 @@ import { LuMessageCircle } from "react-icons/lu";
 import { FcSearch } from "react-icons/fc";
 import { AiFillAudio } from "react-icons/ai";
 import Marquee from "react-fast-marquee";
+import { useNavigate } from "react-router-dom";
 
 // Available languages with native names
 const languages = [
@@ -24,15 +25,19 @@ const languages = [
 ];
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  // 🌍 States
+  const [currentImage, setCurrentImage] = useState(0);
+  const [showLangDropdown, setShowLangDropdown] = useState(false);
+  const [selectedLang, setSelectedLang] = useState("English");
+  const [searchInput, setSearchInput] = useState(""); // input state
+
   // background images list
   const images = [
     "https://media.istockphoto.com/id/1320570548/photo/peanuts-plantation-in-countryside-thailand-near-mountain.jpg?s=612x612&w=0&k=20&c=Rth_YqBkOw4_GA0Ed-zrENSelOnvIopyTH-WYbclrCg=",
     "https://media.istockphoto.com/id/503646746/photo/farmer-spreading-fertilizer-in-the-field-wheat.jpg?s=612x612&w=0&k=20&c=Lgxsjbz0jaYyQrvfzhyAsW2zELtshRP4AtLzkpmcLiE=",
   ];
-
-  const [currentImage, setCurrentImage] = useState(0);
-  const [showLangDropdown, setShowLangDropdown] = useState(false);
-  const [selectedLang, setSelectedLang] = useState("English");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -40,6 +45,15 @@ const Home = () => {
     }, 3000); // change every 3 sec
     return () => clearInterval(interval);
   }, [images.length]);
+
+  const handelSubmit = (e) => {
+    e.preventDefault();
+    navigate("/Page2");
+  };
+
+  const DiseaseDetection = () => {
+    navigate("/DiseaseDetection");
+  };
 
   const toggleLangDropdown = () => {
     setShowLangDropdown(!showLangDropdown);
@@ -49,6 +63,53 @@ const Home = () => {
     setSelectedLang(lang);
     setShowLangDropdown(false);
   };
+
+  // 📍 Detect Location
+ const detectLocation = () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`
+          );
+          const data = await res.json();
+
+          // Pick the most precise available field
+          const suburb =
+            data.address.suburb ||
+            data.address.neighbourhood ||
+            data.address.village ||
+            data.address.town ||
+            "";
+
+          const city =
+            data.address.city ||
+            data.address.state_district ||
+            data.address.county ||
+            "";
+
+          // Combine suburb + city if both exist
+          const locationName = suburb && city ? `${suburb}, ${city}` : suburb || city || "Unknown";
+
+          setSearchInput(locationName); // fill input automatically
+        } catch (err) {
+          console.error("Error fetching location:", err);
+          setSearchInput(`${latitude.toFixed(5)}, ${longitude.toFixed(5)}`);
+        }
+      },
+      (error) => {
+        console.error("Error detecting location:", error);
+        alert("Unable to detect location. Please allow location access.");
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  } else {
+    alert("Geolocation is not supported by this browser.");
+  }
+};
+
 
   return (
     <>
@@ -65,7 +126,7 @@ const Home = () => {
         <div className="bg-[rgba(139,139,139,0.5)] w-full h-12 flex items-center justify-between px-6 relative">
           <div className="flex items-center gap-3">
             <PiPlantFill size={34} className="text-green-700" />
-            <h1 className="text-2xl text-white font-bold">Khet Samadhan</h1>
+            <h1 className="text-2xl text-white font-bold">Krishi Bondhu</h1>
           </div>
           <div className="flex items-center gap-6">
             {/* Language Selector */}
@@ -94,22 +155,31 @@ const Home = () => {
               )}
             </div>
             <CiMenuBurger size={30} className="text-white cursor-pointer" />
-            <RiAccountCircleFill size={30} className="text-white cursor-pointer" />
+            <RiAccountCircleFill
+              size={30}
+              className="text-white cursor-pointer"
+            />
           </div>
         </div>
 
         {/* Search */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <form className="relative w-[40rem] max-w-[90%]">
+          <form
+            className="relative w-[40rem] max-w-[90%]"
+            onSubmit={handelSubmit}
+          >
             <CiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl text-black" />
             <input
               type="text"
               placeholder="Enter location to get crop recommendation"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
               className="w-full h-[3rem] pl-12 pr-12 rounded-full bg-white text-gray-600 placeholder:font-semibold outline-none shadow-md"
             />
             <IoLocationSharp
               size={30}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-red-500"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-red-500 cursor-pointer"
+              onClick={detectLocation}
             />
           </form>
         </div>
@@ -123,7 +193,10 @@ const Home = () => {
             </h1>
           </div>
           <div className="h-16 border-l border-white"></div>
-          <div className="flex flex-col items-center gap-2">
+          <div
+            className="flex flex-col items-center gap-2 cursor-pointer"
+            onClick={DiseaseDetection}
+          >
             <FcSearch size={50} />
             <h1 className="text-white text-lg font-bold uppercase text-center">
               Disease Detection
@@ -216,16 +289,19 @@ const Home = () => {
 
         {/* Middle Search */}
         <div className="flex-1 flex items-center justify-center px-4">
-          <form className="relative w-full max-w-md">
+          <form className="relative w-full max-w-md" onSubmit={handelSubmit}>
             <CiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-xl text-gray-600" />
             <input
               type="text"
               placeholder="Search crops..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
               className="w-full h-10 pl-10 pr-10 rounded-full bg-white text-gray-700 outline-none shadow-md"
             />
             <IoLocationSharp
               size={22}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-red-500"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-red-500 cursor-pointer"
+              onClick={detectLocation}
             />
           </form>
         </div>
@@ -236,7 +312,10 @@ const Home = () => {
             <LuMessageCircle size={32} color="white" />
             <h1 className="text-white text-xs font-semibold">Message</h1>
           </div>
-          <div className="flex flex-col items-center gap-1">
+          <div
+            className="flex flex-col items-center gap-1 cursor-pointer"
+            onClick={DiseaseDetection}
+          >
             <CiSearch size={32} color="white" />
             <h1 className="text-white text-xs font-semibold">Detection</h1>
           </div>

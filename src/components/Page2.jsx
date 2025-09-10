@@ -3,9 +3,14 @@ import { IoCaretBack } from "react-icons/io5";
 import { FiMenu } from "react-icons/fi";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import MiddleButtons from "./MiddleButton";
+import { useNavigate } from "react-router-dom";
 
 const Page2 = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const handelBack = ()=>{
+    navigate("/");
+  }
 
   const data = [
     { name: "Paddy", expense: "₹2000", profit: "₹5000" },
@@ -30,7 +35,7 @@ const Page2 = () => {
         {/* Top Bar */}
         <div className="w-full h-16 md:h-20 flex bg-white/10 backdrop-blur-md items-center justify-between px-4 md:px-6">
           <div className="w-6 md:w-8">
-            <IoCaretBack className="w-6 h-6 md:w-8 md:h-8" />
+            <IoCaretBack className="w-6 h-6 md:w-8 md:h-8"  onClick={handelBack}/>
           </div>
           <h1 className="text-lg md:text-2xl lg:text-3xl font-bold tracking-wide text-center">
             CROP CHART
