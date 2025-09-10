@@ -21,6 +21,7 @@ const DiseaseDetection = () => {
   const handleSearch = () => {
     // yaha tu backend call bhi kar sakta hai
     setSelectedImage(null);
+     navigate("/Solution");
   };
 
   return (

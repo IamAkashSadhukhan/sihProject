@@ -8,13 +8,16 @@ const MiddleButtons = () => {
   const CheckWeather = ()=>{
     navigate('/Weather')
   }
+  const CheckSoil = ()=>{
+     navigate('/Soil')
+  }
   const CheckMarket = ()=>{
     navigate('/Market')
   }
   return (
     <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 md:gap-10 lg:gap-20 my-6 md:my-8 px-4">
       {/* Soil Button */}
-      <button  className="w-full sm:w-auto p-2 flex items-center justify-center sm:justify-start gap-2 rounded-full bg-white/20 backdrop-blur-md text-white font-extrabold text-lg md:text-xl hover:scale-105 transition duration-200">
+      <button onClick={CheckSoil}  className="w-full sm:w-auto p-2 flex items-center justify-center sm:justify-start gap-2 rounded-full bg-white/20 backdrop-blur-md text-white font-extrabold text-lg md:text-xl hover:scale-105 transition duration-200">
         <GiPlantsAndAnimals className="text-green-400 w-8 h-8 md:w-10 md:h-10" />
         <span className="hidden xs:inline">CHECK SOIL</span>
         <span className="xs:hidden"> CHECK SOIL</span>
