@@ -8,6 +8,7 @@ import { FcSearch } from "react-icons/fc";
 import { AiFillAudio } from "react-icons/ai";
 import Marquee from "react-fast-marquee";
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 // Available languages with native names
 const languages = [
@@ -48,6 +49,10 @@ const Home = () => {
 
   const handelSubmit = (e) => {
     e.preventDefault();
+    if (!searchInput.trim()) {
+      toast.error("⚠️ Please enter a location before searching!");
+      return;
+    }
     navigate("/Page2");
   };
 
@@ -65,46 +70,55 @@ const Home = () => {
   };
 
   // 📍 Detect Location
-const detectLocation = () => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords;
-        try {
-          const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-          );
-          const data = await res.json();
+  const detectLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          try {
+            const res = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+            );
+            const data = await res.json();
 
-          // Just pick city/town/village
-          const city =
-            data.address.city ||
-            data.address.town ||
-            data.address.village ||
-            data.address.state || // fallback to state
-            "Unknown";
+            // Just pick city/town/village
+            const city =
+              data.address.city ||
+              data.address.town ||
+              data.address.village ||
+              data.address.state || // fallback to state
+              "Unknown";
 
-          setSearchInput(city); // directly fill city name
-        } catch (err) {
-          console.error("Error fetching location:", err);
-          setSearchInput("Unknown");
-        }
-      },
-      (error) => {
-        console.error("Error detecting location:", error);
-        alert("Unable to detect location. Please allow location access.");
-      },
-      { enableHighAccuracy: true, timeout: 10000 }
-    );
-  } else {
-    alert("Geolocation is not supported by this browser.");
-  }
-};
-
-
+            setSearchInput(city); // directly fill city name
+          } catch (err) {
+            console.error("Error fetching location:", err);
+            setSearchInput("Unknown");
+          }
+        },
+        (error) => {
+          console.error("Error detecting location:", error);
+          alert("Unable to detect location. Please allow location access.");
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+  };
 
   return (
     <>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "#325E24",
+            color: "white",
+            fontWeight: "bold",
+          },
+        }}
+      />
+
       {/* Desktop / Laptop View */}
       <div
         className="hidden md:block h-screen w-screen relative transition-all duration-700"
@@ -124,14 +138,14 @@ const detectLocation = () => {
             {/* Language Selector */}
             <div className="relative">
               <button
-                className="flex items-center gap-2 text-white"
+                className="flex items-center gap-2 text-white hover:text-green-300 transition-colors"
                 onClick={toggleLangDropdown}
               >
                 <IoLanguageOutline size={28} />
                 <span>{selectedLang}</span>
               </button>
               {showLangDropdown && (
-                <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg p-2 max-h-36 overflow-y-auto">
+                <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg p-2 max-h-36 overflow-y-auto z-10">
                   {languages.map((lang, index) => (
                     <div
                       key={index}
@@ -146,10 +160,13 @@ const detectLocation = () => {
                 </div>
               )}
             </div>
-            <CiMenuBurger size={30} className="text-white cursor-pointer" />
+            <CiMenuBurger
+              size={30}
+              className="text-white cursor-pointer hover:text-green-300 transition-colors"
+            />
             <RiAccountCircleFill
               size={30}
-              className="text-white cursor-pointer"
+              className="text-white cursor-pointer hover:text-green-300 transition-colors"
             />
           </div>
         </div>
@@ -160,17 +177,20 @@ const detectLocation = () => {
             className="relative w-[40rem] max-w-[90%]"
             onSubmit={handelSubmit}
           >
-            <CiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl text-black" />
+            <CiSearch
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl text-black cursor-pointer hover:text-green-600 transition-colors"
+              onClick={handelSubmit}
+            />
             <input
               type="text"
               placeholder="Enter location to get crop recommendation"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="w-full h-[3rem] pl-12 pr-12 rounded-full bg-white text-gray-600 placeholder:font-semibold outline-none shadow-md"
+              className="w-full h-[3rem] pl-12 pr-14 rounded-full bg-white text-gray-600 placeholder:font-semibold outline-none shadow-md"
             />
             <IoLocationSharp
               size={30}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-red-500 cursor-pointer"
+              className="absolute right-5 top-1/2 -translate-y-1/2 text-red-500 cursor-pointer hover:text-green-600 transition-colors"
               onClick={detectLocation}
             />
           </form>
@@ -178,25 +198,25 @@ const detectLocation = () => {
 
         {/* Watermark */}
         <div className="bg-[#325E24]/80 mx-auto w-[70%] h-[20%] mt-[25%] flex items-center justify-around rounded-lg p-6">
-          <div className="flex flex-col items-center gap-2">
-            <LuMessageCircle size={50} className="text-white" />
+          <div className="flex flex-col items-center gap-2 cursor-pointer hover:scale-105 transition-transform">
+            <LuMessageCircle size={50} className="text-white hover:text-green-300 transition-colors" />
             <h1 className="text-white text-lg font-bold uppercase text-center">
               Message Your Query
             </h1>
           </div>
           <div className="h-16 border-l border-white"></div>
           <div
-            className="flex flex-col items-center gap-2 cursor-pointer"
+            className="flex flex-col items-center gap-2 cursor-pointer hover:scale-105 transition-transform"
             onClick={DiseaseDetection}
           >
-            <FcSearch size={50} />
+            <FcSearch size={50} className="hover:brightness-110 transition-all" />
             <h1 className="text-white text-lg font-bold uppercase text-center">
               Disease Detection
             </h1>
           </div>
           <div className="h-16 border-l border-white"></div>
-          <div className="flex flex-col items-center gap-2">
-            <AiFillAudio size={50} className="text-white" />
+          <div className="flex flex-col items-center gap-2 cursor-pointer hover:scale-105 transition-transform">
+            <AiFillAudio size={50} className="text-white hover:text-green-300 transition-colors" />
             <h1 className="text-white text-lg font-bold uppercase text-center">
               Talk To Us Anytime
             </h1>
@@ -241,7 +261,7 @@ const detectLocation = () => {
             <div className="relative">
               <IoLanguageOutline
                 size={26}
-                className="text-white cursor-pointer"
+                className="text-white cursor-pointer hover:text-green-300 transition-colors"
                 onClick={toggleLangDropdown}
               />
               {showLangDropdown && (
@@ -260,7 +280,10 @@ const detectLocation = () => {
                 </div>
               )}
             </div>
-            <CiMenuBurger size={26} className="text-white" />
+            <CiSearch
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-xl text-gray-600 cursor-pointer hover:text-green-600 transition-colors"
+              onClick={handelSubmit}
+            />
           </div>
         </div>
 
@@ -282,7 +305,7 @@ const detectLocation = () => {
         {/* Middle Search */}
         <div className="flex-1 flex items-center justify-center px-4">
           <form className="relative w-full max-w-md" onSubmit={handelSubmit}>
-            <CiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-xl text-gray-600" />
+            <CiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-xl text-gray-600 cursor-pointer hover:text-green-600 transition-colors" />
             <input
               type="text"
               placeholder="Search crops..."
@@ -292,7 +315,7 @@ const detectLocation = () => {
             />
             <IoLocationSharp
               size={22}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-red-500 cursor-pointer"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-red-500 cursor-pointer hover:text-green-600 transition-colors"
               onClick={detectLocation}
             />
           </form>
@@ -300,18 +323,18 @@ const detectLocation = () => {
 
         {/* Bottom Buttons */}
         <div className="px-4 py-4 flex items-center justify-around bg-[#34591E]">
-          <div className="flex flex-col items-center gap-1">
+          <div className="flex flex-col items-center gap-1 cursor-pointer hover:scale-110 transition-transform">
             <LuMessageCircle size={32} color="white" />
             <h1 className="text-white text-xs font-semibold">Message</h1>
           </div>
           <div
-            className="flex flex-col items-center gap-1 cursor-pointer"
+            className="flex flex-col items-center gap-1 cursor-pointer hover:scale-110 transition-transform"
             onClick={DiseaseDetection}
           >
             <CiSearch size={32} color="white" />
             <h1 className="text-white text-xs font-semibold">Detection</h1>
           </div>
-          <div className="flex flex-col items-center gap-1">
+          <div className="flex flex-col items-center gap-1 cursor-pointer hover:scale-110 transition-transform">
             <AiFillAudio size={32} color="white" />
             <h1 className="text-white text-xs font-semibold">Talk</h1>
           </div>
