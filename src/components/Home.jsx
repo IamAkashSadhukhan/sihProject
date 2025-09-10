@@ -65,38 +65,29 @@ const Home = () => {
   };
 
   // 📍 Detect Location
- const detectLocation = () => {
+const detectLocation = () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
         try {
           const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
           );
           const data = await res.json();
 
-          // Pick the most precise available field
-          const suburb =
-            data.address.suburb ||
-            data.address.neighbourhood ||
-            data.address.village ||
-            data.address.town ||
-            "";
-
+          // Just pick city/town/village
           const city =
             data.address.city ||
-            data.address.state_district ||
-            data.address.county ||
-            "";
+            data.address.town ||
+            data.address.village ||
+            data.address.state || // fallback to state
+            "Unknown";
 
-          // Combine suburb + city if both exist
-          const locationName = suburb && city ? `${suburb}, ${city}` : suburb || city || "Unknown";
-
-          setSearchInput(locationName); // fill input automatically
+          setSearchInput(city); // directly fill city name
         } catch (err) {
           console.error("Error fetching location:", err);
-          setSearchInput(`${latitude.toFixed(5)}, ${longitude.toFixed(5)}`);
+          setSearchInput("Unknown");
         }
       },
       (error) => {
@@ -109,6 +100,7 @@ const Home = () => {
     alert("Geolocation is not supported by this browser.");
   }
 };
+
 
 
   return (
